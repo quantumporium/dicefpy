@@ -1,4 +1,4 @@
-#! usr/bin/python3
+#! /usr/bin/python3
 
 """
  name: dice for python (diceFpy in short)
@@ -32,8 +32,8 @@ def usage():
     """)
     return
 
-def fatal():
-    print("[ ERROR ] an fatal error occur, the program will stop shortly ...")
+def fatal(error_code):
+    print(f"[ ERROR {error_code}] an fatal error occur, the program will stop shortly ...")
     exit()
     return
 
@@ -42,13 +42,8 @@ def print_dice(parsed_arg):
         non-pure function, print random dice with minimalist style
 
     """
-    if parsed_arg[0] == "empty":
-        ammout_dice = 0
-    elif parsed_arg[0] == "number":
-        amount_dice = parsed_arg[1]
-
-    for option in len(int(ammount_dice)):
-        print(f"[{randomNb(1, 12)}]") 
+    for time in range( int(parsed_arg[1]) ):
+            print(f"[{randomNb(1, 12)}]") 
     
     return
 
@@ -56,31 +51,26 @@ def parse_arg(argv):
     """    
         pure function, parse the terminal command 
     """
-    if argv[1:] == None:
-        return [ "empty" ] 
+    if len(argv) == 1:
+        return [ "empty", 1 ] 
 
     if "-h" in argv:
         return [ "help" ] 
 
     if "-n" in argv:
-        return [ "number", argv( index("-n") + 1 ) ]
-
-    print(argv)
+        try:
+            return [ "number", int(argv[2]) ]
+        except:
+            fatal(1) # fatal 1
+    else:
+        fatal(2) # fatal 2
 
     return
-
-"""
-    parse argue
-        -> -h (show usage)
-        -> nothing print one dice
-        -> -n 10 (print multiple dice)
-        -> -l (print dice in the same line)
-"""
 
 if __name__ == "__main__":
 
     parsed_arg = parse_arg(argv)
-
+    
     if parsed_arg[0] == "help":
         usage()
 
@@ -91,4 +81,5 @@ if __name__ == "__main__":
         print_dice( parsed_arg )
 
     else:
-        fatal()
+        usage()
+        fatal(3) # fatal 3
